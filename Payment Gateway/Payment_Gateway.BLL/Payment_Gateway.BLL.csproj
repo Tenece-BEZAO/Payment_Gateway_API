@@ -10,4 +10,11 @@
     <ProjectReference Include="..\Payment_Gateway.DAL\Payment_Gateway.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Infrastructure\Jwt\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implementation\" />
+  </ItemGroup>
+
 </Project>
