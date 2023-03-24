@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Payment_Gateway.Shared\Payment_Gateway.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
