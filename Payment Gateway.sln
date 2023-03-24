@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payment_Gateway.BLL", "Paym
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payment_Gateway.Shared", "Payment Gateway\Payment_Gateway.Shared\Payment_Gateway.Shared.csproj", "{F538C4AB-7B29-40AE-9F1D-79C88CB37035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment_Gateway.Models", "Payment_Gateway.Models\Payment_Gateway.Models.csproj", "{A24C04B8-E3D4-4545-A26E-4EF73FB53B55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment_Gateway.Models", "Payment Gateway\Payment_Gateway.Models\Payment_Gateway.Models.csproj", "{A24C04B8-E3D4-4545-A26E-4EF73FB53B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
