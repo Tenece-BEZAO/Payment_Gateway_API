@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Payment_Gateway.Models.Entities;
+using Payment_Gateway.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,11 @@ namespace Payment_Gateway.DAL.Context
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Card> Cards { get; set; }
-        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Payout> Payouts { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,8 +8,8 @@
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
-        public bool IsAdmin { get; set; }
-        public ICollection<Payment> Payments { get; set; }
+        public Role Role { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
 
     }
 
