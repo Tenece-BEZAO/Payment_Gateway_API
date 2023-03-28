@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using NLog;
 using Payment_Gateway.API.Extensions;
+using Payment_Gateway.BLL.Paystack.Implementation;
+using Payment_Gateway.BLL.Paystack.Interfaces;
+using System.Reflection;
 
 namespace Payment_Gateway.API
 {
@@ -20,6 +23,9 @@ namespace Payment_Gateway.API
             builder.Services.ConfigureIISIntegration();
             builder.Services.ConfigureLoggerService();
             builder.Services.ConfigureSqlContext(builder.Configuration);
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
+            builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
