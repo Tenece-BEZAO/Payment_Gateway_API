@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Payment_Gateway.DAL.Context
 {
     public class PaymentGatewayDbContext : IdentityDbContext<User>
+
     {
         public PaymentGatewayDbContext(DbContextOptions options)
             :base(options)
