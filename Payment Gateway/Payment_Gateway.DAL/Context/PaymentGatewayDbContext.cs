@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Models.Enums;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.DAL.Context
 {
-    public class PaymentGatewayDbContext : DbContext
+    public class PaymentGatewayDbContext : IdentityDbContext<User>
     {
         public PaymentGatewayDbContext(DbContextOptions options)
             :base(options)
@@ -17,7 +18,9 @@ namespace Payment_Gateway.DAL.Context
             
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<AdminProfile> AdminProfiles { get; set; }
+       // public DbSet<User> Users { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Payout> Payouts { get; set; }
@@ -44,8 +47,9 @@ namespace Payment_Gateway.DAL.Context
                 .HasIndex(u => u.Email, "IX_UniqueEmail")
                 .IsUnique();
 
-
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
         }
     }
 }
