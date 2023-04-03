@@ -48,7 +48,6 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
                 CallbackUrl = deposit.CallbackUrl,
             };
 
-     
             var result = payStack.Transactions.Initialize(request);
 
             if (result.Status)
@@ -62,12 +61,12 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
         }
 
 
-        public TransactionVerifyResponse VerifyPayment(TransactionVerifyResponse reference)
+        public TransactionVerifyResponse VerifyPayment(string reference)
         {
-            TransactionVerifyResponse response = Paystack.Transactions.Verify(reference.Data.Reference);
+            TransactionVerifyResponse response = Paystack.Transactions.Verify(reference);
             if (response.Status && response.Data.Status == "success")
             {
-                var transaction = _TransactionRepo.GetBy(x => x.TrxRef == reference.Data.Reference).FirstOrDefault();
+                var transaction = _TransactionRepo.GetBy(x => x.TrxRef == reference).FirstOrDefault();
                 if (transaction != null)
                 {
 

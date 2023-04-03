@@ -38,7 +38,7 @@ namespace Payment_Gateway.API.Controllers
         {
             try
             {
-                var response = await _adminProfileServices.CreateProfile(adminProfile);
+                var response = await _adminServices.CreateProfile(adminProfile);
 
                 return Ok(response);
             }
@@ -57,7 +57,7 @@ namespace Payment_Gateway.API.Controllers
         {
             try
             {
-                var response = await _adminProfileServices.UpdateProfile(adminProfile);
+                var response = await _adminServices.UpdateProfile(adminProfile);
 
                 return Ok(response);
             }

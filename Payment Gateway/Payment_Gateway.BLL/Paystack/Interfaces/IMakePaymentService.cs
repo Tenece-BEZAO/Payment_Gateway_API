@@ -6,8 +6,8 @@ namespace Payment_Gateway.BLL.Paystack.Interfaces
 {
     public interface IMakePaymentService
     {
-        TransactionInitializeResponse ProcessPayment(DepositPaymentRequest paymentRequest);
-        TransactionVerifyResponse VerifyPayment(TransactionVerifyResponse response);
+        TransactionInitializeResponse ProcessPayment(ProcessPaymentRequest paymentRequest);
+        TransactionVerifyResponse VerifyPayment(string reference);
         IEnumerable<Transaction> AllPayments();
     }
 }
