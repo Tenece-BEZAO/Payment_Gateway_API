@@ -12,8 +12,8 @@ using Payment_Gateway.DAL.Context;
 namespace Payment_Gateway.DAL.Migrations
 {
     [DbContext(typeof(PaymentGatewayDbContext))]
-    [Migration("20230403074053_RoleMigration")]
-    partial class RoleMigration
+    [Migration("20230403162755_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,22 +46,22 @@ namespace Payment_Gateway.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dedf2e47-ecff-42b5-90c1-6a40377d5d04",
-                            ConcurrencyStamp = "f590f12a-262c-47bf-9a64-00a0e6be1e02",
+                            Id = "bb60bfe3-0d3c-4490-a681-719a18b64bd4",
+                            ConcurrencyStamp = "de9d235c-7ae6-4100-95d1-34a4fc6e2fa4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "65ff3fe4-62fd-4a79-a629-c1eebfa1af96",
-                            ConcurrencyStamp = "ddfc7650-6374-4f97-ae63-e9b4345932e9",
+                            Id = "55264b84-c065-456e-b631-e28601ed5d9f",
+                            ConcurrencyStamp = "c4ff12bc-940f-48e9-a248-dee32454f9db",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "a1eee120-3133-4415-8d36-81ef4a936588",
-                            ConcurrencyStamp = "a96fe075-31f0-46cf-ad35-05b26373b06f",
+                            Id = "6404842d-8b2c-4486-a45f-940405198a90",
+                            ConcurrencyStamp = "2e2f41b4-5991-4503-a31a-5254be014e10",
                             Name = "ThirdParty",
                             NormalizedName = "THIRDPARTY"
                         });

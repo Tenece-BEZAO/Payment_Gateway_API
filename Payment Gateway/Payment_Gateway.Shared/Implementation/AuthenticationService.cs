@@ -192,7 +192,7 @@ namespace Payment_Gateway.Shared.Implementation
             //    { FullName = fullName, UserType = userType, UserId = user.Id, TwoFactor = true },
             //    destructureObject: true)).Information("2FA Sent");
 
-            return new AuthenticationResponse { UserType = userType, FullName = fullName, ApplicationUser = ApplicationUserId, TwoFactor = true };
+            return new AuthenticationResponse { JwtToken = userToken, UserType = userType, FullName = fullName, ApplicationUser = ApplicationUserId, TwoFactor = true };
         }
 
 

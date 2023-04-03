@@ -43,22 +43,22 @@ namespace Payment_Gateway.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dedf2e47-ecff-42b5-90c1-6a40377d5d04",
-                            ConcurrencyStamp = "f590f12a-262c-47bf-9a64-00a0e6be1e02",
+                            Id = "bb60bfe3-0d3c-4490-a681-719a18b64bd4",
+                            ConcurrencyStamp = "de9d235c-7ae6-4100-95d1-34a4fc6e2fa4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "65ff3fe4-62fd-4a79-a629-c1eebfa1af96",
-                            ConcurrencyStamp = "ddfc7650-6374-4f97-ae63-e9b4345932e9",
+                            Id = "55264b84-c065-456e-b631-e28601ed5d9f",
+                            ConcurrencyStamp = "c4ff12bc-940f-48e9-a248-dee32454f9db",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "a1eee120-3133-4415-8d36-81ef4a936588",
-                            ConcurrencyStamp = "a96fe075-31f0-46cf-ad35-05b26373b06f",
+                            Id = "6404842d-8b2c-4486-a45f-940405198a90",
+                            ConcurrencyStamp = "2e2f41b4-5991-4503-a31a-5254be014e10",
                             Name = "ThirdParty",
                             NormalizedName = "THIRDPARTY"
                         });
@@ -139,7 +139,7 @@ namespace Payment_Gateway.DAL.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -169,18 +169,24 @@ namespace Payment_Gateway.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("RoleId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("RoleId1");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
@@ -332,9 +338,21 @@ namespace Payment_Gateway.DAL.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("RoleId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("RoleId1");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
@@ -476,6 +494,12 @@ namespace Payment_Gateway.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Payment_Gateway.Models.Entities.ApplicationRole", "Role")
+                        .WithMany("RoleClaims")
+                        .HasForeignKey("RoleId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Role");
                 });
 
@@ -500,9 +524,21 @@ namespace Payment_Gateway.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Payment_Gateway.Models.Entities.ApplicationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Payment_Gateway.Models.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Payment_Gateway.Models.Entities.ApplicationUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
