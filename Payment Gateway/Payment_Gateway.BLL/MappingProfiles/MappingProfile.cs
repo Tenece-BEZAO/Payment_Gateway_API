@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Payment_Gateway.Shared.DataTransferObjects.Request;
+using PayStack.Net;
 
 namespace Payment_Gateway.BLL.MappingProfiles
 {
@@ -14,6 +11,15 @@ namespace Payment_Gateway.BLL.MappingProfiles
         public MappingProfile()
         {
             CreateMap<UserForRegistrationDto, User>();
+            CreateMap<User, UserForRegistrationDto>();
+            CreateMap<TransactionRequestDto, Transaction>();
+            CreateMap<Transaction, TransactionVerifyResponse>();
+            CreateMap<InitiateTransferRequest, InitiateTransferResponse>();
+
+
+            /*CreateMap<UserProfileDto, CustomerProfile>();
+            CreateMap<CustomerProfile, UserProfileDto>();*/
+
 
         }
     }

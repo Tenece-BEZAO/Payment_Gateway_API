@@ -5,28 +5,28 @@ using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using AutoMapper;
+
 namespace Payment_Gateway.BLL.Implementation.Services
 {
     public sealed class UserServices : IUserServices
     {
-
+        private readonly IMapper _mapper;
         private readonly IRepository<User> _userRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerManager _logger;
         private readonly UserManager<User> _userManager;
 
-        public UserServices(ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public UserServices(ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _userRepo = _unitOfWork.GetRepository<User>();
+            _mapper = mapper;
         }
 
-
-
-
-        public async Task<User> RegisterUser(UserForRegistrationDto userForRegistration)
+        public async Task<User> RegisterUser(UserProfileDto userForRegistration)
         {
             try
             {
@@ -34,29 +34,19 @@ namespace Payment_Gateway.BLL.Implementation.Services
                 var existingUser = await _userManager.FindByEmailAsync(userForRegistration.Email.Trim().ToLower());
                 if (existingUser != null)
                 {
-                    throw new InvalidOperationException("Email exists!");
+                    throw new InvalidOperationException("User exists!");
                 }
 
-                var user = new User
-                {
-                    FirstName = userForRegistration.FirstName,
-                    LastName = userForRegistration.LastName,
-                    UserName = userForRegistration.UserName,
-                    Email = userForRegistration.Email,
-                    PhoneNumber = userForRegistration.PhoneNumber
-                };
+                var user = _mapper.Map<User>(userForRegistration);
 
                 user.EmailConfirmed = true;
-
                 var result = await _userManager.CreateAsync(user, userForRegistration.Password);
+
                 if (!result.Succeeded)
                 {
-
                     string errMsg = string.Join("\n", result.Errors.Select(x => x.Description));
-
                     throw new InvalidOperationException($"Failed to create user:\n{errMsg}");
                 }
-
                 return user;
 
             }
@@ -73,7 +63,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateUserProfile()
+        public void UpdateUser(int userId)
         {
             throw new NotImplementedException();
         }

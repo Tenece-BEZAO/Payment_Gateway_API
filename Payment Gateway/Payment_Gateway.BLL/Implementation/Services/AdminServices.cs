@@ -20,8 +20,6 @@ namespace Payment_Gateway.BLL.Implementation.Services
         private readonly IUserServices _userServices;
         private readonly UserManager<User> _userManager;
 
-
-
         public AdminServices(ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager, IUserServices userServices)
         {
             _logger = logger;
@@ -58,7 +56,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
                     UserName = adminForRegistration.UserName,
                     PhoneNumber = adminForRegistration.PhoneNumber,
                     Email = adminForRegistration.Email,
-                    UserId = user.Id
+                    UserId = user.Id.ToString(),
 
                 };
 

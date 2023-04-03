@@ -1,10 +1,17 @@
-﻿namespace Payment_Gateway.Models.Entities
+﻿using Payment_Gateway.Models.Extensions;
+using System.ComponentModel.DataAnnotations;
+using Payment_Gateway.Models.Enums;
+
+namespace Payment_Gateway.Models.Entities
 {
     public class Wallet : BaseEntity
     {
-        public decimal Balance { get; set; }
-        public string Currency { get; set; } = string.Empty;
-        public User User { get; set; }  
+        [Key]
+        public string WalletId { get; set; } = AccountNumberGenerator.GenerateRandomNumber();
+        public long Balance { get; set; }
+        public Currency Currency { get; set; } = Currency.Naira;
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
     }
 
 }

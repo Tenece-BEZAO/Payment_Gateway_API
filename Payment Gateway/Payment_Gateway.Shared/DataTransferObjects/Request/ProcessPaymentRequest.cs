@@ -37,4 +37,18 @@ namespace Payment_Gateway.Shared.DataTransferObjects.Request
 
        
     }
+
+    public class DepositPaymentRequest
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [JsonProperty("amount")]
+        [Required]
+        public int Amount { get; set; }
+
+        [Required]
+        public string WalletId { get; set; }
+        
+    }
 }

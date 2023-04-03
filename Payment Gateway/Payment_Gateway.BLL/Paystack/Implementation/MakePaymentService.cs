@@ -1,40 +1,105 @@
-﻿using Microsoft.Extensions.Configuration;
-using Payment_Gateway.DAL.Interfaces;
-using System;
-using AutoMapper;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
-using PayStack.Net;
+using Payment_Gateway.DAL.Interfaces;
+using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects.Request;
+using PayStack.Net;
 
 namespace Payment_Gateway.BLL.Paystack.Implementation
 {
     public class MakePaymentService : IMakePaymentService
     {
-        static IConfiguration _configuration;
+        private readonly IRepository<Transaction> _TransactionRepo;
+        private readonly IRepository<Wallet> _walletRepo;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILoggerManager _logger;
+        private readonly IMapper _mapper;
+        private static IConfiguration _configuration;
 
-        IMapper _mapper;
-        public MakePaymentService(IConfiguration configuration, IMapper mapper)
+        private PayStackApi Paystack { get; set; }
+
+        public MakePaymentService(IConfiguration configuration, IMapper mapper, ILoggerManager logger)
         {
             _configuration = configuration;
             _mapper = mapper;
+            _logger = logger;
+            _TransactionRepo = _unitOfWork.GetRepository<Transaction>();
+            _walletRepo = _unitOfWork.GetRepository<Wallet>();
         }
 
-        public TransactionInitializeResponse ProcessPayment(ProcessPaymentRequest paymentRequest)
+        public TransactionInitializeResponse ProcessPayment(ProcessPaymentRequest deposit)
         {
-            string ApiKey = (string)_configuration.GetSection("Paystack").GetSection("ApiKey").Value;
+            _logger.LogInfo("Make Payment");
+
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
             PayStackApi payStack = new(secretKey: ApiKey);
-            TransactionInitializeRequest transactionInitializeRequest = _mapper.Map<TransactionInitializeRequest>(paymentRequest);
-            var result = payStack.Transactions.Initialize(transactionInitializeRequest);
+            payStack = Paystack;
+
+            TransactionInitializeRequest request = new()
+            {
+                AmountInKobo = deposit.AmountInKobo * 100,
+                Email = deposit.Email,
+                Currency = "NGN",
+                Bearer = deposit.Bearer,
+                Reference = deposit.Reference,
+                CallbackUrl = deposit.CallbackUrl,
+            };
+
+     
+            var result = payStack.Transactions.Initialize(request);
+
+            if (result.Status)
+            {
+                var createTrans = _mapper.Map<Transaction>(deposit);
+                _logger.LogInfo("Transaction record created");
+                _TransactionRepo.AddAsync(createTrans);
+                return result;
+            }
             return result;
         }
 
-        public Task<bool> VerifyPayment()
+
+        public TransactionVerifyResponse VerifyPayment(TransactionVerifyResponse reference)
         {
-            throw new NotImplementedException();
+            TransactionVerifyResponse response = Paystack.Transactions.Verify(reference.Data.Reference);
+            if (response.Status && response.Data.Status == "success")
+            {
+                var transaction = _TransactionRepo.GetBy(x => x.TrxRef == reference.Data.Reference).FirstOrDefault();
+                if (transaction != null)
+                {
+
+                    transaction.Status = true;
+                    //var updateref = _mapper.Map<Transaction>(transaction);
+                    _TransactionRepo.UpdateAsync(transaction);
+                    _logger.LogInfo("Transaction record updated");
+                    return response;
+                }
+            }
+            _logger.LogError("Transaction Verification Failed");
+            return response;
+        }
+
+
+        public IEnumerable<Transaction> AllPayments()
+        {
+            var transactions = _TransactionRepo.GetAll();
+            return transactions.ToList();
+        }
+
+        public Wallet UpdateWallet(string walletId, long amount)
+        {
+            var wallet = _walletRepo.GetSingleByAsync(x => x.WalletId == walletId, include: x => x.Include(x => x.Customer), tracking: true);
+            if (wallet != null)
+            {
+                Wallet updateUallet = new()
+                {
+                    WalletId = walletId,
+                    Balance = wallet.Result.Balance,
+                }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.LoggerService.Implementation;
@@ -11,6 +12,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
 {
     public class AdminProfileServices : IAdminProfileServices
     {
+        private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<AdminProfile> _adminProfileRepo;
         private readonly IRepository<Admin> _adminRepo;
@@ -18,12 +20,17 @@ namespace Payment_Gateway.BLL.Implementation.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerManager _logger;
 
-        public AdminProfileServices(IHttpContextAccessor httpContextAccessor, ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public AdminProfileServices(IHttpContextAccessor httpContextAccessor, ILoggerManager logger, UserManager<User> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
-            _unitOfWork = unitOfWork;
             _userManager = userManager;
+
+        }
+        public AdminProfileServices(IMapper mapper, IUnitOfWork unitOfWork)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
             _adminProfileRepo = _unitOfWork.GetRepository<AdminProfile>();
             _adminRepo = _unitOfWork.GetRepository<Admin>();
         }
@@ -43,18 +50,6 @@ namespace Payment_Gateway.BLL.Implementation.Services
                     throw new Exception("Only admins are authorized to create admin profile.");
                 }
 
-                var profile = new AdminProfile
-                {
-
-                    FirstName = adminProfile.FirstName,
-                    LastName = adminProfile.LastName,
-                    PhoneNumber = adminProfile.PhoneNumber,
-                    Email = adminProfile.Email,
-                    Address = adminProfile.Address,
-                    UserName = adminProfile.UserName
-
-                };
-
                 Admin admin = await _adminRepo.GetSingleByAsync(s => s.UserId == userId);
 
                 if (admin == null)
@@ -62,29 +57,34 @@ namespace Payment_Gateway.BLL.Implementation.Services
                     throw new Exception("Admin not found");
                 }
 
+                var profile = _mapper.Map<AdminProfile>(adminProfile);
                 profile.AdminIdentity = admin.Id;
 
-
-                AdminProfile AddProfile = await _adminProfileRepo.AddAsync(profile);
-
-                return AddProfile;
+                return await _adminProfileRepo.AddAsync(profile);
             }
 
             catch (Exception ex)
             {
 
                 _logger.LogError($"Something went wrong in the {nameof(CreateProfile)} service method {ex}");
-
                 throw;
             }
         }
 
-        public void DeleteProfile()
+        public async void DeleteProfile(int userId)
         {
+           /* try
+            {
+                _logger.LogInfo("Deleting Admin user profile");
+
+                var user = await _adminProfileRepo.GetSingleByAsync(u => u.Id == userId);
+
+            }
+*/
             throw new NotImplementedException();
         }
 
-        public void DisplayProfile()
+        public void DisplayProfile(int userId)
         {
             throw new NotImplementedException();
         }
@@ -117,18 +117,10 @@ namespace Payment_Gateway.BLL.Implementation.Services
                     throw new Exception("Admin profile not found");
                 }
 
-                // Update the AdminProfile object with the new values from the DTO
-                profile.FirstName = adminProfile.FirstName;
-                profile.LastName = adminProfile.LastName;
-                profile.PhoneNumber = adminProfile.PhoneNumber;
-                profile.Email = adminProfile.Email;
-                profile.Address = adminProfile.Address;
-                profile.UserName = adminProfile.UserName;
+               var updateAdmin = _mapper.Map(adminProfile, profile);
 
-                await _adminProfileRepo.UpdateAsync(profile);
-                await _unitOfWork.SaveChangesAsync();
+                return await _adminProfileRepo.UpdateAsync(updateAdmin);
 
-                return profile;
             }
             catch (Exception ex)
             {

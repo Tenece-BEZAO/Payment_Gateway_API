@@ -26,6 +26,7 @@ namespace Payment_Gateway.Shared.DataTransferObjects
         public string Email { get; init; }
 
         [Required(ErrorMessage = "Phone Number is required")]
+        [StringLength(12, ErrorMessage = "character limit exceeded")]
         public string PhoneNumber { get; init; }
     }
 }

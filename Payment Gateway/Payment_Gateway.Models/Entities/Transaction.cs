@@ -4,9 +4,10 @@ namespace Payment_Gateway.Models.Entities
 {
     public class Transaction : BaseEntity
     {
-        public decimal Amount { get; set; }
-        public bool IsSuccessful { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public int Amount { get; set; }
+        public string TrxRef { get; set; }
+        public string Email { get; set; }
+        public bool Status { get; set; }
     }
 }

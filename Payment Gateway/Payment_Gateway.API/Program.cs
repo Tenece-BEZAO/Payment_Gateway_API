@@ -42,6 +42,7 @@ namespace Payment_Gateway.API
 
             builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
             builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
+            builder.Services.AddScoped<ITransferService, TransferService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

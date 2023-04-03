@@ -25,10 +25,38 @@ namespace Payment_Gateway.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Payment successful", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "Payment failed", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<TransactionInitializeResponse>> ProcessPayment(ProcessPaymentRequest processPayment)
+        public async Task<ActionResult<TransactionInitializeResponse>> ProcessPayment(DepositPaymentRequest processPayment)
         {
             var response = _paymentService.ProcessPayment(processPayment);
             return Ok(response);
         }
+
+
+        [AllowAnonymous]
+        [HttpPost("Verify card Payment")]
+        [SwaggerOperation(Summary = "Makes payment using paystack")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "verification successful", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "verification failed", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<TransactionVerifyResponse>> VerifyPayment(TransactionVerifyResponse processPayment)
+        {
+            var verifypayment = _paymentService.VerifyPayment(processPayment);
+            return Ok(verifypayment);
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("Get all Payment")]
+        [SwaggerOperation(Summary = "Get all payment using paystack")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "successful", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "failed", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<TransactionVerifyResponse>> AllPayments(TransactionVerifyResponse processPayment)
+        {
+            var verifypayment = _paymentService.AllPayments();
+            return Ok(verifypayment);
+        }
+
+      
     }
 }

@@ -11,8 +11,8 @@ namespace Payment_Gateway.BLL.Interfaces.IServices
     public interface IAdminProfileServices
     {
         Task<AdminProfile> CreateProfile(AdminProfileDto adminProfile);
-        void DisplayProfile();
+        void DisplayProfile(int userId);
         Task<AdminProfile> UpdateProfile(AdminProfileDto adminProfile);
-        void DeleteProfile();
+        void DeleteProfile(int userId);
     }
 }
