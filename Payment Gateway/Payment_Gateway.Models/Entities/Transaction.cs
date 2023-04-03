@@ -7,6 +7,6 @@ namespace Payment_Gateway.Models.Entities
         public decimal Amount { get; set; }
         public bool IsSuccessful { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
