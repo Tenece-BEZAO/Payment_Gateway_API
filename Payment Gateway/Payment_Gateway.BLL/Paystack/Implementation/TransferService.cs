@@ -65,7 +65,7 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
         public void FinalizeTransfer(CreateTransferRecipientResponse request)
         {
             var otp = _PayStack.Transfers.EnableOtp;
-            HttpClient.Content
+            //HttpClient.Content
             _PayStack.Post<IApiResponse, dynamic>("https://api.paystack.co/transfer/finalize_transfer", new
             {
                 transfer_code = request.Data.RecipientCode,
