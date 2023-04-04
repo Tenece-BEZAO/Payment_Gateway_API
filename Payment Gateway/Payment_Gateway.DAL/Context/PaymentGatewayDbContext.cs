@@ -20,7 +20,6 @@ namespace Payment_Gateway.DAL.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
-        public DbSet<Payout> Payouts { get; set; }
 
 
 
@@ -43,6 +42,18 @@ namespace Payment_Gateway.DAL.Context
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email, "IX_UniqueEmail")
                 .IsUnique();
+            modelBuilder.Entity<Wallet>()
+               .HasKey(a => a.WalletId);
+
+            modelBuilder.Entity<Wallet>(p =>
+            {
+                p.Property(p => p.WalletId)
+                    .ValueGeneratedOnAdd();
+
+                p.Property(p => p.Balance)
+                    .HasDefaultValue(0);
+
+            });
 
 
             base.OnModelCreating(modelBuilder);
