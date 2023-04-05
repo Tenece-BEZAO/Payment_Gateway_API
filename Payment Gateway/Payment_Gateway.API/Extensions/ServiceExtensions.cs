@@ -9,6 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Infrastructure.jwt;
+using Payment_Gateway.BLL.Handlers;
+using Payment_Gateway.DAL.Interfaces;
+using Payment_Gateway.DAL.Implementation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Payment_Gateway.API.Extensions
 {
@@ -22,7 +27,7 @@ namespace Payment_Gateway.API.Extensions
             services.AddTransient<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
             services.AddTransient<IServiceFactory, ServiceFactory>();
             //services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<Interfaces.IAuthenticationService, Implementation.AuthenticationService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
         }
 
