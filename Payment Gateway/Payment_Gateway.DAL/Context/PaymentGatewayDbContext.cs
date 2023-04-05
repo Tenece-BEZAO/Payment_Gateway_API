@@ -1,6 +1,7 @@
 ﻿ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Payment_Gateway.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 using Payment_Gateway.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,20 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.DAL.Context
 {
-    public class PaymentGatewayDbContext : DbContext
-
+    public class PaymentGatewayDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
+        ApplicationUserClaim, ApplicationUserRole, IdentityUserLogin<string>, ApplicationRoleClaim,
+        IdentityUserToken<string>>
     {
-        public PaymentGatewayDbContext(DbContextOptions options)
-            :base(options)
+        public PaymentGatewayDbContext(DbContextOptions<PaymentGatewayDbContext> options)
+            : base(options)
         {
-            
-        }
 
-        public DbSet<User> Users { get; set; }
+        }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<AdminProfile> AdminProfiles { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Payout> Payouts { get; set; }
 
 
 
@@ -59,7 +62,7 @@ namespace Payment_Gateway.DAL.Context
 
 
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }

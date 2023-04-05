@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,11 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Payment_Gateway.DAL\Payment_Gateway.DAL.csproj" />
     <ProjectReference Include="..\Payment_Gateway.Shared\Payment_Gateway.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Infrastructure\Jwt\" />
   </ItemGroup>
 
   <ItemGroup>

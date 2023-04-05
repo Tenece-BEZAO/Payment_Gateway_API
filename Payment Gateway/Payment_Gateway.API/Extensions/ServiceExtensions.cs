@@ -15,6 +15,17 @@ namespace Payment_Gateway.API.Extensions
 
     public static class ServiceExtensions
     {
+        public static void RegisterServices(this IServiceCollection services)
+        {
+            services.AddTransient<IJWTAuthenticator, JwtAuthenticator>();
+            services.AddTransient<IAuthorizationHandler, CustomAuthorizationHandler>();
+            services.AddTransient<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
+            services.AddTransient<IServiceFactory, ServiceFactory>();
+            //services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<Interfaces.IAuthenticationService, Implementation.AuthenticationService>();
+            services.AddTransient<IRoleService, RoleService>();
+        }
+
         //Allows all requests from all origins to be sent to our API
         public static void ConfigureCors(this IServiceCollection services) =>
              services.AddCors(options =>
