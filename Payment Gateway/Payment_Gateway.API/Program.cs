@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using Payment_Gateway.API.Extensions;
 using Payment_Gateway.API.Filter;
+using Payment_Gateway.BLL.Extentions;
 using Payment_Gateway.BLL.Paystack.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.DAL.Context;
@@ -25,16 +26,16 @@ namespace Payment_Gateway.API
             // Add services to the container.
             builder.Services.ConfigureCors();
             builder.Services.ConfigureIISIntegration();
-
+            builder.Services.BindConfigurations(builder.Configuration);
             builder.Services.ConfigureLoggerService();
            
 
             builder.Services.AddAuthentication();
-            builder.Services.ConfigureIdentity();
+            //builder.Services.ConfigureIdentity();
 
             builder.Services.ConfigureJWT(builder.Configuration);
-
-            builder.Services.ConfigureSqlContext(builder.Configuration);
+            builder.Services.AddDatabaseConnection();
+            //builder.Services.ConfigureSqlContext(builder.Configuration);
 
             builder.Services.AddScoped<ValidationFilterAttribute>();
 
@@ -75,7 +76,7 @@ namespace Payment_Gateway.API
                 });
             });
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
             builder.Services.RegisterServices();
             builder.Services.AddHttpContextAccessor();
 
@@ -95,10 +96,13 @@ namespace Payment_Gateway.API
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
-            app.UseCors("CorsPolicy");
+            app.UseCors("AllowAll");
 
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.MapControllers();
 
             app.Run();

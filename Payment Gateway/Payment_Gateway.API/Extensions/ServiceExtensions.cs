@@ -49,10 +49,27 @@ namespace Payment_Gateway.API.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services) =>
             services.AddSingleton<ILoggerManager, LoggerManager>();
 
-        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
-           services.AddDbContext<PaymentGatewayDbContext>(opts =>
-           opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+        //public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
+        //   services.AddDbContext<PaymentGatewayDbContext>(opts =>
+        //   opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
 
+
+        public static void AddDatabaseConnection(this IServiceCollection services)
+        {
+            IConfiguration? config;
+
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                config = serviceProvider.GetService<IConfiguration>();
+            }
+            string cc = config.GetConnectionString("sqlConnection");
+            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
+           .AddDefaultTokenProviders()
+           .AddEntityFrameworkStores<PaymentGatewayDbContext>();
+
+        }
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
