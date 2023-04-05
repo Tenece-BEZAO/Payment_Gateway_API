@@ -7,8 +7,6 @@ using Payment_Gateway.Models.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Payment_Gateway.BLL.Implementation.Services;
-using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Implementation;
 
@@ -54,10 +52,7 @@ namespace Payment_Gateway.API.Extensions
             .AddEntityFrameworkStores<PaymentGatewayDbContext>()
             .AddDefaultTokenProviders();
         }
-        public static void ConfigureAuthenticationServices(this IServiceCollection services)
-        {
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-        }
+       
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
@@ -84,13 +79,7 @@ namespace Payment_Gateway.API.Extensions
         }
 
 
-        public static void ConfigureServices(this IServiceCollection services)
-        {
-           services.AddScoped<IUserServices, UserServices>();
-           services.AddScoped<IAdminServices, AdminServices>();
-           services.AddScoped<IAdminProfileServices, AdminProfileServices>();
-
-        }
+      
 
     }
 }

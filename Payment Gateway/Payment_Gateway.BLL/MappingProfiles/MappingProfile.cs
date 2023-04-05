@@ -11,10 +11,6 @@ namespace Payment_Gateway.BLL.MappingProfiles
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
-        {
-            CreateMap<UserForRegistrationDto, User>();
-
-        }
+       
     }
 }
