@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Azure;
-using Azure.Core;
 using Microsoft.Extensions.Configuration;
 using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
@@ -8,13 +6,7 @@ using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects.Request;
 using PayStack.Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Payment_Gateway.BLL.Paystack.Implementation
 {
@@ -26,7 +18,7 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        private readonly PayStackApi _PayStack;
+        private PayStackApi PayStack;
         public TransferService(IConfiguration configuration, IMapper mapper, ILoggerManager logger)
         {
             _configuration = configuration;
@@ -36,82 +28,105 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
 
         }
 
-
         public CreateTransferRecipientResponse? CreateTransferRecipient(TransferProcessRequest request)
         {
             string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
-            if(ApiKey != null)
-            {
-                PayStackApi payStack = new(secretKey: ApiKey);
-                payStack = _PayStack;
-                /*var url = $"https://api.paystack.co/transferrecipient";*/
-                //var api = new PayStackApi("sk_test_your_secret_key_here");
+            PayStackApi payStack = new(secretKey: ApiKey);
 
+            if (ApiKey != null)
+            {
                 CreateTransferRecipientRequest transactionInitializeRequest = _mapper.Map<CreateTransferRecipientRequest>(request);
                 var result = payStack.Transfers.Recipients.Create(transactionInitializeRequest);
                 return result;
             }
             return null;
-
         }
 
         public InitiateTransferResponse InitiateTransfer(InitiateTransferRequest request)
-        {      
-            InitiateTransferResponse initiateTransferResponse = _mapper.Map<InitiateTransferResponse>(request);
-            var result = _PayStack.Post<InitiateTransferResponse, object>("transfer", initiateTransferResponse);
+        {
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+   
+            var result = payStack.Transfers.InitiateTransfer(request.amount, request.recipientcode, request.source, request.currency, request.reason );
+            
             return result;
         }
 
-        public void FinalizeTransfer(CreateTransferRecipientResponse request)
+
+        public void FinalizeTransfer(FinalizeTransferRequest request)
         {
-            var otp = _PayStack.Transfers.EnableOtp;
-            //HttpClient.Content
-            _PayStack.Post<IApiResponse, dynamic>("https://api.paystack.co/transfer/finalize_transfer", new
-            {
-                transfer_code = request.Data.RecipientCode,
-                //otp = request.Data.Details..,
-            });
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+            payStack.Transfers.Recipients
+            payStack.Transfers.FinalizeTransfer(request.transfercode, EnableOtp().ToString());        
         }
 
-        public Task<object> FetchTransfer()
-        {
-            throw new NotImplementedException();
-        }      
 
-        public string? ListTransferRecipient(CreateTransferRecipientResponse request)
+
+        public FetchTransferResponse FetchTransfer(string transferIdOrCode)
         {
-            var details = request.Data.Details;
-            if(details != null)
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+
+            return payStack.Transfers.FetchTransfer(transferIdOrCode);
+
+        }
+
+
+        public ListTransfersResponse ListTransferRecipients(ListTransfersRequest request)
+        {
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+
+            var response = new ListTransfersRequest()
             {
-                var url = $"https://api.paystack.co/bank/resolve?account_number={details.AccountNumber}&bank_code={details.BankCode}";
-                var response = _PayStack.Get<IApiResponse>(url);
-                response.Status = true;
-                _logger.LogInfo(response.Message);
-                return details.AccountName.ToString();
+                Status = "success",
+                From = "2022-01-01",
+                To = "2022-12-31",
+                PerPage = 50,
+                Page = 1
+            };
 
-            }
-            return "";
+            return payStack.Transfers.ListTransfers(response.PerPage, response.Page);
+
         }
 
         public string? ListTransfers()
         {
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+            return payStack.Transfers.EnableOtp();
             throw new NotImplementedException();
         }
 
-        public TransferOtpResponse ResendOtp(string transferCode, ResendOtpReasons reason) => _api.Post<TransferOtpResponse, dynamic>("transfer/resend_otp", new
+        public TransferOtpResponse EnableOtp()
         {
-            transfer_code = transferCode,
-            reason = reason == ResendOtpReasons.ResendOtp ? "resend_otp" : "transfer"
-        });
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+            return payStack.Transfers.EnableOtp();
+        }
+           
+        public TransferOtpResponse ResendOtp(string transferCode, ResendOtpReasons reason)
+        {
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
 
-        public TransferOtpResponse DisableOtpBegin() => _api.Post<TransferOtpResponse, dynamic>("transfer/disable_otp", new { });
+            return payStack.Transfers.ResendOtp(transferCode, reason);
+            
+        }
+
+        public TransferOtpResponse DisableOtpBegin()
+        {
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+
+            return payStack.Transfers.DisableOtpBegin();
+        }
 
         public TransferOtpResponse DisableOtpComplete(string otp) => _api.Post<TransferOtpResponse, dynamic>("transfer/disable_otp_finalize",
             new { otp = otp }
         );
 
-        public TransferOtpResponse EnableOtp() => _api.Post<TransferOtpResponse, dynamic>("transfer/enable_otp",
-            new { }
-        );
+        public TransferCheckBalanceResponse CheckBalance() => _api.Get<TransferCheckBalanceResponse>("balance");
     }
 }

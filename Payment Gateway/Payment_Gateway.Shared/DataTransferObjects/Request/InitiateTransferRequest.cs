@@ -6,18 +6,33 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.Shared.DataTransferObjects.Request
 {
-    public class InitiateTransferRequest
+    /*public class InitiateTransferRequest
     {
-        public long amount { get; set; }
-        public string source { get; set; } = "balance";
-        public string recipientcode { get; set; }
-        public string currency { get; set; } = "NGN";
-        public string reason { get; set; }
+        public int Amount { get; set; }
+        public string Source { get; set; } = "balance";
+        public string Recipientcode { get; set; }
+        public string Currency { get; set; } = "NGN";
+        public string Reason { get; set; }
     }
-
+*/
     public class FinalizeTransferRequest
     {
-        public string transfercode { get; set; }
-        public string otp { get; set; }
+        public string? transfercode { get; set; }
+    }
+
+
+    public class ListTransfersRequest
+    {
+        public string Status { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public int PerPage { get; set; }
+        public int Page { get; set; } 
+    }
+
+    public class ListRequest
+    {
+        public int PerPage { get; set; }
+        public int Page { get; set; } 
     }
 }

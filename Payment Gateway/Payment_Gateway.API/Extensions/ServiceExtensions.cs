@@ -11,6 +11,8 @@ using Payment_Gateway.BLL.Implementation.Services;
 using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Paystack.Interfaces;
+using Payment_Gateway.BLL.Paystack.Implementation;
 
 namespace Payment_Gateway.API.Extensions
 {
@@ -89,6 +91,7 @@ namespace Payment_Gateway.API.Extensions
            services.AddScoped<IUserServices, UserServices>();
            services.AddScoped<IAdminServices, AdminServices>();
            services.AddScoped<IAdminProfileServices, AdminProfileServices>();
+           services.AddScoped<IPayoutService, PayoutService>();
 
         }
 

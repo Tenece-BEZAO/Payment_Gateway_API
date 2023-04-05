@@ -12,7 +12,7 @@ namespace Payment_Gateway.Shared.DataTransferObjects.Request
     public class ProcessPaymentRequest 
     {
         [Required]
-        public string Reference { get; set; }
+        public string Reference { get; set; } = Guid.NewGuid().ToString();
 
         [JsonProperty("amount")]
         [Required]
@@ -41,14 +41,14 @@ namespace Payment_Gateway.Shared.DataTransferObjects.Request
     public class DepositPaymentRequest
     {
         [Required]
+        public string Reference { get; set; } = Guid.NewGuid().ToString();
+
+        [Required]
         public string Email { get; set; }
 
         [JsonProperty("amount")]
         [Required]
         public int Amount { get; set; }
-
-        [Required]
-        public string WalletId { get; set; }
         
     }
 }

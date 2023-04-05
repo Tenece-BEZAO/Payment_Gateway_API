@@ -17,6 +17,10 @@ namespace Payment_Gateway.BLL.MappingProfiles
             CreateMap<InitiateTransferRequest, InitiateTransferResponse>();
             CreateMap<Wallet, DepositPaymentRequest>();
 
+            CreateMap<TransferTransaction, InitiateTransferRequest>();
+            CreateMap<InitiateTransferRequest, TransferTransaction>();
+
+
 
             /*CreateMap<UserProfileDto, CustomerProfile>();
             CreateMap<CustomerProfile, UserProfileDto>();*/

@@ -10,11 +10,12 @@ namespace Payment_Gateway.BLL.Paystack.Interfaces
 {
     public interface ITransferService
     {
-        CreateTransferRecipientResponse? CreateTransferRecipient(TransferProcessRequest transferProcessRequest);
-        Task<object> ListTransferRecipients();
-        Task<object> InitiateTransfer();
-        Task<object> FetchTransfer();
-        Task<object> ListTransfers();
-        Task<object> FinalizeTransfer();
+        ResolveAccountNumberResponse ResolveAccountNumber(ResolveAccountNumberRequest request);
+        CreateTransferRecipientResponse? CreateTransferRecipient(CreateRecipientRequest transferProcessRequest);
+        ListTransfersResponse ListTransferRecipients();
+        InitiateTransferResponse InitiateTransfer(InitiateTransferRequest request);
+        public FetchTransferResponse FetchTransfer(string transferIdOrCode);
+        string ListTransfers();
+        public void FinalizeTransfer(FinalizeTransferRequest request);
     }
 }

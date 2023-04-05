@@ -36,7 +36,7 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
 
             string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
             PayStackApi payStack = new(secretKey: ApiKey);
-            payStack = Paystack;
+            Paystack = payStack;
 
             TransactionInitializeRequest request = new()
             {
@@ -60,6 +60,36 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
             return result;
         }
 
+        public ResolveCardBinResponse ResolveCardBin(string cardBin)
+        {
+            _logger.LogInfo("Verify Recipient Account details");
+
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+            if (payStack != null)
+            {
+                var result = payStack.Miscellaneous.ResolveCardBin(cardBin);
+                return result;
+            }
+            _logger.LogError("ApiKey is not valid");
+            return new ResolveCardBinResponse();
+        }
+
+        public ListBanksResponse ListBanks(ListRequest list)
+        {
+            _logger.LogInfo("Verify Recipient Account details");
+
+            string? ApiKey = (string?)_configuration.GetSection("Paystack")?.GetSection("ApiKey")?.Value;
+            PayStackApi payStack = new(secretKey: ApiKey);
+
+            if (payStack != null)
+            {             
+                var result = payStack.Miscellaneous.ListBanks(list.PerPage, list.Page);
+                return result;
+            }
+            _logger.LogError("ApiKey is not valid");
+            return new ListBanksResponse();
+        }
 
         public TransactionVerifyResponse VerifyPayment(string reference)
         {
@@ -69,7 +99,6 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
                 var transaction = _TransactionRepo.GetBy(x => x.TrxRef == reference).FirstOrDefault();
                 if (transaction != null)
                 {
-
                     transaction.Status = true;
                     //var updateref = _mapper.Map<Transaction>(transaction);
                     _TransactionRepo.UpdateAsync(transaction);
@@ -88,7 +117,7 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
             return transactions.ToList();
         }
 
-        public Wallet UpdateWallet(string walletId, long amount)
+        /*public Wallet UpdateWallet(string walletId, long amount)
         {
             var wallet = _walletRepo.GetSingleByAsync(x => x.WalletId == walletId, include: x => x.Include(x => x.Customer), tracking: true);
             if (wallet != null)
@@ -96,9 +125,10 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
                 Wallet updateUallet = new()
                 {
                     WalletId = walletId,
-                    Balance = wallet.Result.Balance,
-                }
+                    Balance = wallet.Result.Balance + amount,
+                };
+
             }
-        }
+        }*/
     }
 }

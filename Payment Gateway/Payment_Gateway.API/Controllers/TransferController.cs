@@ -25,7 +25,7 @@ namespace Payment_Gateway.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "successful", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "failed", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public ActionResult<TransactionInitializeResponse> CreateTranserRecipient(TransferProcessRequest transferProcessRequest)
+        public ActionResult<TransactionInitializeResponse> CreateTranserRecipient(CreateRecipientRequest transferProcessRequest)
         {
             var response = _transferService.CreateTransferRecipient(transferProcessRequest);
             return Ok(response);
