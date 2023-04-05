@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.Shared.DataTransferObjects.Request
 {
+
     public class ProcessPaymentRequest 
     {
         [Required]
