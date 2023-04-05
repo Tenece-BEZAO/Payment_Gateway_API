@@ -15,7 +15,8 @@ namespace Payment_Gateway.DAL.Context
         {
             
         }
-
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<AdminProfile> AdminProfiles { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Payout> Payouts { get; set; }

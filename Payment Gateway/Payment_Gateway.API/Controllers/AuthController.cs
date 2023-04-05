@@ -6,9 +6,9 @@ using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects.Requests;
 using Payment_Gateway.Shared.DataTransferObjects.Responses;
-using Payment_Gateway.Shared.Implementation;
-using Payment_Gateway.Shared.Infrastructure;
-using Payment_Gateway.Shared.Interfaces;
+using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Infrastructure;
+using Payment_Gateway.BLL.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 

@@ -3,14 +3,14 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Payment_Gateway.API.Extensions;
-using Payment_Gateway.Shared.Extentions;
-using Payment_Gateway.Shared.Infrastructure.jwt;
+using Payment_Gateway.BLL.Extentions;
+using Payment_Gateway.BLL.Infrastructure.jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Payment_Gateway.Shared.Infrastructure;
+using Payment_Gateway.BLL.Infrastructure;
 using System.Reflection;
 using Payment_Gateway.DAL.Context;
-using Payment_Gateway.Shared.Handlers;
+using Payment_Gateway.BLL.Handlers;
 
 namespace Payment_Gateway.API
 {
@@ -104,7 +104,7 @@ namespace Payment_Gateway.API
             builder.Services.BindConfigurations(builder.Configuration);
 
             //Add automapper
-            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.Shared"));
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.BLL"));
             builder.Services.RegisterServices();
             builder.Services.AddHttpContextAccessor();
 
