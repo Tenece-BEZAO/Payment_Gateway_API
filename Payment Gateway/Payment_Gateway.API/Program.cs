@@ -3,8 +3,6 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using Payment_Gateway.API.Extensions;
 using Payment_Gateway.API.Filter;
-using Payment_Gateway.BLL.Implementation.Services;
-using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.Paystack.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.DAL.Context;
@@ -29,7 +27,7 @@ namespace Payment_Gateway.API
             builder.Services.ConfigureIISIntegration();
 
             builder.Services.ConfigureLoggerService();
-            builder.Services.ConfigureAuthenticationServices();
+           
 
             builder.Services.AddAuthentication();
             builder.Services.ConfigureIdentity();
@@ -78,9 +76,6 @@ namespace Payment_Gateway.API
             });
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
-
-
-            builder.Services.ConfigureServices();
 
             builder.Services.AddHttpContextAccessor();
 
