@@ -29,6 +29,7 @@ namespace Payment_Gateway.API.Extensions
             //services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ITransactionService, TransactionService>();
         }
 
         //Allows all requests from all origins to be sent to our API
