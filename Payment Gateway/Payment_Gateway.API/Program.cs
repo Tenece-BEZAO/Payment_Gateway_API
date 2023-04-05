@@ -2,6 +2,15 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using NLog;
 using Payment_Gateway.API.Extensions;
+using Payment_Gateway.API.Filter;
+using Payment_Gateway.BLL.Implementation.Services;
+using Payment_Gateway.BLL.Interfaces.IServices;
+using Payment_Gateway.BLL.Paystack.Implementation;
+using Payment_Gateway.BLL.Paystack.Interfaces;
+using Payment_Gateway.DAL.Context;
+using Payment_Gateway.DAL.Implementation;
+using Payment_Gateway.DAL.Interfaces;
+using System.Reflection;
 
 namespace Payment_Gateway.API
 {
@@ -18,16 +27,62 @@ namespace Payment_Gateway.API
             // Add services to the container.
             builder.Services.ConfigureCors();
             builder.Services.ConfigureIISIntegration();
+
             builder.Services.ConfigureLoggerService();
+            builder.Services.ConfigureAuthenticationServices();
+
+            builder.Services.AddAuthentication();
+            builder.Services.ConfigureIdentity();
+
+            builder.Services.ConfigureJWT(builder.Configuration);
+
             builder.Services.ConfigureSqlContext(builder.Configuration);
+
+            builder.Services.AddScoped<ValidationFilterAttribute>();
+
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
+            builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payment_Gateway_API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description =
+        "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\""
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                            Array.Empty<string>()
+                    },
+                });
             });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
+
+
+            builder.Services.ConfigureServices();
+
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
@@ -49,8 +104,6 @@ namespace Payment_Gateway.API
 
 
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
