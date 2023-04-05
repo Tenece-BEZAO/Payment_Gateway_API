@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.DAL.Context
 {
-    public class PaymentGatewayDbContext : IdentityDbContext<User>
+    public class PaymentGatewayDbContext : DbContext
 
     {
         public PaymentGatewayDbContext(DbContextOptions options)
