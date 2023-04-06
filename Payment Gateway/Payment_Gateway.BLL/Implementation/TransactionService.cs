@@ -45,6 +45,37 @@ namespace Payment_Gateway.BLL.Implementation
             throw new NotImplementedException();
         }
 
+        //public async Task<IEnumerable<AppointmentDto>> SearchAppointmentsAsync(string searchTerm, DateTime? startDate, DateTime? endDate)
+        //{
+        //    //var query = _appointmentReposito.GetByAsync(a => a.EnrolleeName.ToLower().Contains(searchTerm.ToLower()) ||
+        //    //                                                  a.Reason.ToLower().Contains(searchTerm.ToLower()));
+
+        //    var transaction = await _transRepo.GetByAsync(a => a.User.ToString().Contains(searchTerm.ToLower()) ||
+        //                                                       a.TrxRef.ToLower().Contains(searchTerm.ToLower()));
+        //    if (startDate.HasValue && endDate.HasValue)
+        //    {
+        //        transaction = transaction.Where(t => t.CreatedAt >= startDate);
+        //        transaction = transaction.Where(t => t.CreatedAt >= endDate);
+        //    }
+
+
+        //    //if (startDate.HasValue)
+        //    //{
+        //    //    query = query.Where(a => a.AppointmentDate >= startDate.Value);
+        //    //}
+
+        //    //if (endDate.HasValue)
+        //    //{
+        //    //    query = query.Where(a => a.AppointmentDate <= endDate.Value);
+        //    //}
+
+        //    var appointments = await query.OrderBy(a => a.AppointmentDate).ToListAsync();
+
+        //    var appointmentDtos = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+        //    return appointmentDtos;
+        //}
+
+
         //public async Task<Transaction> GetTransactions(int Id)
         //{
         //    Transaction transactionList = await _transRepo.GetSingleByAsync(x => x.Id == Id);
