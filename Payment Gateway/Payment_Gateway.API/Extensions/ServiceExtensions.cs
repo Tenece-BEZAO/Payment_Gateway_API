@@ -14,6 +14,8 @@ using Payment_Gateway.BLL.Handlers;
 using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.DAL.Implementation;
 using Microsoft.AspNetCore.Authorization;
+using Payment_Gateway.BLL.Interfaces.IServices;
+using Payment_Gateway.BLL.Implementation.Services;
 
 namespace Payment_Gateway.API.Extensions
 {
@@ -30,6 +32,7 @@ namespace Payment_Gateway.API.Extensions
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ITransactionService, TransactionService>();
+            services.AddScoped<IUserServices, UserServices>();
         }
 
         //Allows all requests from all origins to be sent to our API
@@ -111,9 +114,6 @@ namespace Payment_Gateway.API.Extensions
                 };
             });
         }
-
-
-      
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.DAL.Interfaces;
@@ -39,7 +40,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
             {
                 _logger.LogInfo("Creating the Admin as a user first, before assigning the admin role to them and them add them to Admins table.");
 
-                var user = await _userServices.RegisterUser(new UserForRegistrationDto
+                var user = await _userServices.RegisterUser(new ApplicationUserForRegistrationDto
                 {
                     FirstName = adminForRegistration.FirstName,
                     LastName = adminForRegistration.LastName,

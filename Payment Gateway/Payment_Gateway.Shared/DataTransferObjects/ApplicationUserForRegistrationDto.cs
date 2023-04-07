@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Payment_Gateway.Shared.DataTransferObjects
 {
-    public record UserForRegistrationDto
+
+    public record ApplicationUserForRegistrationDto
     {
         [Required(ErrorMessage = "Firstname is required")]
         public string FirstName { get; init; }
