@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Payment_Gateway.BLL.Paystack.Interfaces
 {
     public interface IMakePaymentService
     {
-        TransactionInitializeResponse ProcessPayment(ProcessPaymentRequest paymentRequest);
+        Task<object> MakePayment(PaymentRequest paymentRequest);
+
         Task<bool> VerifyPayment();
     }
 }
