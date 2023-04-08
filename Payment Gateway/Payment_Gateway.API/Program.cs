@@ -4,6 +4,7 @@ using NLog;
 using Payment_Gateway.API.Extensions;
 using Payment_Gateway.API.Filter;
 using Payment_Gateway.BLL.Extentions;
+using Payment_Gateway.BLL.Infrastructure;
 using Payment_Gateway.BLL.Paystack.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.DAL.Context;
@@ -28,9 +29,14 @@ namespace Payment_Gateway.API
             builder.Services.ConfigureIISIntegration();
             builder.Services.BindConfigurations(builder.Configuration);
             builder.Services.ConfigureLoggerService();
-           
+
 
             builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("Authorization", policy => policy.Requirements.Add(new AuthorizationRequirment()));
+            });
+
             //builder.Services.ConfigureIdentity();
 
             builder.Services.ConfigureJWT(builder.Configuration);
@@ -39,7 +45,7 @@ namespace Payment_Gateway.API
 
             builder.Services.AddScoped<ValidationFilterAttribute>();
 
-            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.BLL"));
             builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
 
             builder.Services.AddControllers();
