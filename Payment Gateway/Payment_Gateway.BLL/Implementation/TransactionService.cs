@@ -2,6 +2,7 @@
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
+using Payment_Gateway.Shared.DataTransferObjects;
 
 namespace Payment_Gateway.BLL.Implementation
 {
@@ -40,9 +41,26 @@ namespace Payment_Gateway.BLL.Implementation
             return transactionList;
         }
 
-        public Task<IEnumerable<Transaction>> GetTransactionsByDate(DateTime date)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            var transaction = await _transRepo.GetAllAsync();
+            return transaction.Where(t => t.CreatedAt.Date == date.Date);
+            
+            //var transactions = await _transRepo.GetAllAsync();
+            //return transactions.Where(t => t.TransactionDate.Date == date.Date);
+        }
+
+        public async Task<TransactionDto> GetTransactionByReference(string reference)
+        {
+            var transaction = await _transRepo.GetSingleByAsync(t => t.TrxRef == reference);
+
+            if (transaction == null)
+            {
+                throw new ArgumentException("Invalid transaction reference.");
+            }
+
+            var transactionDto = _mapper.Map<TransactionDto>(transaction);
+            return transactionDto;
         }
 
         //public async Task<IEnumerable<AppointmentDto>> SearchAppointmentsAsync(string searchTerm, DateTime? startDate, DateTime? endDate)

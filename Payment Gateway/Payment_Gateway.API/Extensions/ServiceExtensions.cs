@@ -32,7 +32,7 @@ namespace Payment_Gateway.API.Extensions
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ITransactionService, TransactionService>();
-            services.AddScoped<IUserServices, UserServices>();
+            //services.AddScoped<IUserServices, UserServices>();
         }
 
         //Allows all requests from all origins to be sent to our API

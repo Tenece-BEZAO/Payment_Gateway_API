@@ -73,11 +73,11 @@ namespace Payment_Gateway.BLL.Implementation
 
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Failed to create user: {(result.Errors.FirstOrDefault())?.Description}");
+                throw new InvalidOperationException($"Failed to create user: {result.Errors.FirstOrDefault()?.Description}");
             }
 
 
-                //await _userManager.SetTwoFactorEnabledAsync(user, true);
+            //await _userManager.SetTwoFactorEnabledAsync(user, true);
 
             AddUserToRoleRequest userRole = new() { UserName = user.UserName, Role = request.Role };
 
