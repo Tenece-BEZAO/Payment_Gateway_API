@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Payment_Gateway.BLL.Paystack.Interfaces;
+using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Models.Enums;
 using Payment_Gateway.Shared.DataTransferObjects.Request;
@@ -18,13 +19,17 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
 {
     public class MakePaymentService : IMakePaymentService
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Transaction> _transRepo;
         static IConfiguration? _configuration;
 
         IMapper _mapper;
-        public MakePaymentService(IConfiguration configuration, IMapper mapper)
+        public MakePaymentService(IConfiguration configuration, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _configuration = configuration;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _transRepo = _unitOfWork.GetRepository<Transaction>();
         }
 
         public async Task<object> MakePayment(PaymentRequest paymentRequest)
@@ -52,6 +57,20 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
             string responseContent = await response.Content.ReadAsStringAsync();
             string reference = JsonConvert.DeserializeObject<dynamic>(responseContent).data.reference;
             string amount = JsonConvert.DeserializeObject<dynamic>(responseContent).data.amount;
+
+            // create Transaction entity
+            var transaction = new Transaction
+            {
+                TrxRef = reference,
+                Amount = paymentRequest.AmountInKobo,
+                Email = paymentRequest.Email,
+                CreatedAt = DateTime.Now
+            };
+            // add Transaction entity to repository
+            _transRepo.Add(transaction);
+            // save changes to database
+            await _unitOfWork.SaveChangesAsync();
+
             return new PaymentResponse { Reference = reference, Amount = amount };
         }
 
