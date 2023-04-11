@@ -3,7 +3,7 @@ using Payment_Gateway.Models.Enums;
 
 namespace Payment_Gateway.Models.Entities   
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<string>
     {
         public string FirstName { get; set; }
         public string? MiddleName { get; set; }
