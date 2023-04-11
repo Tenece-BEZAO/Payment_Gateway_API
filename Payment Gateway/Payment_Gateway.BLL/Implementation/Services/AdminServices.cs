@@ -40,7 +40,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
             {
                 _logger.LogInfo("Creating the Admin as a user first, before assigning the admin role to them and them add them to Admins table.");
 
-                var user = await _userServices.RegisterUser(new ApplicationUserForRegistrationDto
+                var user = await _userServices.RegisterUser(new UserForRegistrationDto
                 {
                     FirstName = adminForRegistration.FirstName,
                     LastName = adminForRegistration.LastName,

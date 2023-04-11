@@ -2,7 +2,7 @@
 
 namespace Payment_Gateway.Shared.DataTransferObjects
 {
-    public record AdminProfileDto : ApplicationUserForRegistrationDto
+    public record AdminProfileDto : UserForRegistrationDto
     {
 
         [Required(ErrorMessage = "Address is required")]

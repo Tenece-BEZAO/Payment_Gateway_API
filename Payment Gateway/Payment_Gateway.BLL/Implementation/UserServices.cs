@@ -26,7 +26,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
 
 
 
-        public async Task<User> RegisterUser(ApplicationUserForRegistrationDto userForRegistration)
+        public async Task<User> RegisterUser(UserForRegistrationDto userForRegistration)
         {
             try
             {

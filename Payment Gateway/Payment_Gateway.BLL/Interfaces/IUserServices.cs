@@ -5,7 +5,7 @@ namespace Payment_Gateway.BLL.Interfaces.IServices
 {
     public interface IUserServices
     {
-        Task<User> RegisterUser(ApplicationUserForRegistrationDto userForRegistration);
+        Task<User> RegisterUser(UserForRegistrationDto userForRegistration);
         void GetUserProfile();
         void UpdateUserProfile();
 
