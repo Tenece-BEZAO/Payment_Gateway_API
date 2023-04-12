@@ -10,11 +10,12 @@ namespace Payment_Gateway.BLL.Interfaces.IServices
         //void GetUserProfile();
         //void UpdateUserProfile();
 
-        Task<User> GetUserById(string id);
+        Task<ApplicationUser> GetUserById(string id);
         Task<bool> UpdateUser(string id, UserForUpdateDto userForUpdate);
         Task<bool> DeleteUser(string id);
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
-        Task<User> PatchUser(string userId, JsonPatchDocument<UserForUpdateDto> patchDocument);
+        Task<IEnumerable<ApplicationUser>> GetUsersByRole(string roleName);
+        Task<ApplicationUser> PatchUser(string userId, JsonPatchDocument<UserForUpdateDto> patchDocument);
 
     }
 }

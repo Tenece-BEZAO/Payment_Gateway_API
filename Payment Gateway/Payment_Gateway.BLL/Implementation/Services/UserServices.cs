@@ -19,6 +19,8 @@ namespace Payment_Gateway.BLL.Implementation.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerManager _logger;
         private readonly IRepository<ApplicationUser> _userRepo;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IRepository<ApplicationRole> _roleRepo;
         //private readonly UserManager<User> _userManager;
 
         public UserServices(IServiceFactory serviceFactory, ILoggerManager logger)
@@ -28,6 +30,14 @@ namespace Payment_Gateway.BLL.Implementation.Services
             _unitOfWork = _serviceFactory.GetService<IUnitOfWork>();
             _userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
             _userRepo = _unitOfWork.GetRepository<ApplicationUser>();
+            _roleManager =_serviceFactory.GetService<RoleManager<ApplicationRole>>();
+            _roleRepo = _unitOfWork.GetRepository<ApplicationRole>();
+
+
+
+
+            //_roleManager = _serviceFactory.GetService<RoleManager<ApplicationRole>>();
+            //_roleRepo = _unitOfWork.GetRepository<ApplicationRole>();
         }
         //public UserServices(ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
         //{
@@ -54,12 +64,24 @@ namespace Payment_Gateway.BLL.Implementation.Services
             return await _userManager.Users.ToListAsync();
         }
 
-        public Task<User> GetUserById(string id)
+        public async Task<ApplicationUser> GetUserById(string id)
         {
-            throw new NotImplementedException();
+            return await _userManager.FindByIdAsync(id);
         }
 
-        public Task<User> PatchUser(string userId, JsonPatchDocument<UserForUpdateDto> patchDocument)
+        public async Task<IEnumerable<ApplicationUser>> GetUsersByRole(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role == null)
+            {
+                throw new ArgumentException($"Role not found: {roleName}");
+            }
+
+            var users = await _userManager.GetUsersInRoleAsync(roleName);
+            return users;
+        }
+
+        public Task<ApplicationUser> PatchUser(string userId, JsonPatchDocument<UserForUpdateDto> patchDocument)
         {
             throw new NotImplementedException();
         }
@@ -128,7 +150,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
             return true;
         }
 
-        
+
 
         //public void GetUserProfile()
         //{

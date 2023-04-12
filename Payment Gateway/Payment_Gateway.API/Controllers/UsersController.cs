@@ -23,6 +23,21 @@ namespace Payment_Gateway.API.Controllers
             return Ok(users);
         }
 
+        [HttpGet("Get user by Id")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var users = await _userServices.GetUserById(id);
+            return Ok(users);
+        }
+
+        [HttpGet("role/{roleName}")]
+        public async Task<IActionResult> GetUsersByRole(string roleName)
+        {
+            var users = await _userServices.GetUsersByRole(roleName);
+            return Ok(users);
+        }
+
+
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string Id)
         {
