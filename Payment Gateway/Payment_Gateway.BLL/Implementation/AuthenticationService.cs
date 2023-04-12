@@ -46,7 +46,6 @@ namespace Payment_Gateway.BLL.Implementation
         public async Task<string> CreateUser(UserRegistrationRequest request)
         {
             ApplicationUser existingUser = await _userManager.FindByEmailAsync(request.Email);
-            _userManager.FindByNameAsync("name");
             if (existingUser != null)
                 throw new InvalidOperationException($"User already exists with Email {request.Email}");
 
