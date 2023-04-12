@@ -9,6 +9,6 @@ namespace Payment_Gateway.BLL.Interfaces.IServices
 {
     public interface IAdminServices
     {
-        Task<string> RegisterAdmin(AdminForRegistrationDto adminForRegistration);
+        //Task<string> RegisterAdmin(AdminForRegistrationDto adminForRegistration);
     }
 }

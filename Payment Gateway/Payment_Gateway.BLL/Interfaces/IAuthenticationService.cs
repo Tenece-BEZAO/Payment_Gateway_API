@@ -1,10 +1,5 @@
 ﻿using Payment_Gateway.Shared.DataTransferObjects.Requests;
 using Payment_Gateway.Shared.DataTransferObjects.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Payment_Gateway.BLL.Interfaces
 {

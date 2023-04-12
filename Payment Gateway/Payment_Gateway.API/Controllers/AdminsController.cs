@@ -21,15 +21,15 @@ namespace Payment_Gateway.API.Controllers
 
 
 
-        [HttpPost("register")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] AdminForRegistrationDto adminForRegistration)
-        {
+        //[HttpPost("register")]
+        //public async Task<IActionResult> RegisterAdmin([FromBody] AdminForRegistrationDto adminForRegistration)
+        //{
 
-            var response = await _adminServices.RegisterAdmin(adminForRegistration);
+        //    var response = await _adminServices.RegisterAdmin(adminForRegistration);
 
-            return Ok(response);
+        //    return Ok(response);
 
-        }
+        //}
 
 
         [HttpPost("createProfile")]

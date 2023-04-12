@@ -84,6 +84,7 @@ namespace Payment_Gateway.API
 
             //builder.Services.AddScoped<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
             builder.Services.RegisterServices();
+
             builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
