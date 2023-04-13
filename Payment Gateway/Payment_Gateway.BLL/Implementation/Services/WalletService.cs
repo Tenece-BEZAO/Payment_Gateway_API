@@ -15,6 +15,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
 
         public WalletService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _UserRepo = _unitOfWork.GetRepository<ApplicationUser>();
             _WalletRepo = _unitOfWork.GetRepository<Wallet>();
         }
