@@ -2,7 +2,7 @@
 {
     public enum Currency
     {
-        Naira = 1,
+        NGN = 1,
         Dollar,
         Euro,
         Pounds

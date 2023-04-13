@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Payment_Gateway.Models.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Payment_Gateway.Models.Entities   
 {
@@ -14,6 +15,14 @@ namespace Payment_Gateway.Models.Entities
         public bool Active { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+
+        [ForeignKey("WalletId")]
+        public string WalletId { get; set; }
+        public Wallet Wallet { get; set; }
+
+        [ForeignKey("ApiSecretKey")]
+        public string ApiSecretKey { get; set; }
+        public ApiKey ApiKey { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
         public virtual ICollection<ApplicationUserClaim> Claims { get; set; }
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }

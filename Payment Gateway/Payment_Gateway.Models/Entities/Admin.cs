@@ -17,7 +17,6 @@ namespace Payment_Gateway.Models.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string UserId { get; set; }
-
         public User User { get; set; }
     }
 }
