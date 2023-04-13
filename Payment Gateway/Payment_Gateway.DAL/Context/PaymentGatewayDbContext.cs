@@ -21,11 +21,12 @@ namespace Payment_Gateway.DAL.Context
 
         }
         public DbSet<Admin> Admins { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<AdminProfile> AdminProfiles { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
         public DbSet<Payout> Payouts { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -57,8 +58,21 @@ namespace Payment_Gateway.DAL.Context
 
                 p.Property(p => p.Balance)
                     .HasDefaultValue(0);
-
             });
+
+            modelBuilder.Entity<ApiKey>(p =>
+            {
+                p.Property(p => p.ApiSecretKey)
+                    .ValueGeneratedOnAdd();
+
+                p.HasKey(p=> p.ApiSecretKey);
+            });
+
+            /*modelBuilder.Entity<ApplicationUser>()
+                .HasOne(t1 => t1.Wallet)
+                .WithOne(t2 => t2.)
+                .HasForeignKey<Wallet>(t2 => t2.Id)
+                .OnDelete(DeleteBehavior.Cascade);*/
 
 
             base.OnModelCreating(modelBuilder);

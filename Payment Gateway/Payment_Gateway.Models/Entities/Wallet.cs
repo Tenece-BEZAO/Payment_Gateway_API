@@ -1,6 +1,7 @@
 ﻿using Payment_Gateway.Models.Enums;
 using Payment_Gateway.Models.Extensions;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Payment_Gateway.Models.Entities
 {
@@ -9,9 +10,11 @@ namespace Payment_Gateway.Models.Entities
         [Key]
         public string WalletId { get; set; } = AccountNumberGenerator.GenerateRandomNumber();
         public long Balance { get; set; }
-        public Currency Currency { get; set; } = Currency.Naira;
+        public Currency Currency { get; set; } = Currency.NGN;
+
+        [ForeignKey("Id")]
         public int UserId { get; set; }
-        public User User { get; set; }  
+        public ApplicationUser User { get; set; }  
     }
 
 }

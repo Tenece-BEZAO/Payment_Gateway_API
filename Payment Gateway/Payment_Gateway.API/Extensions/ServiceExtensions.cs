@@ -1,25 +1,28 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Payment_Gateway.BLL.Handlers;
+using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Infrastructure.jwt;
+using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.BLL.LoggerService.Interface;
 using Payment_Gateway.DAL.Context;
-using Payment_Gateway.Models.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Payment_Gateway.BLL.Interfaces;
-using Payment_Gateway.BLL.Implementation;
-using Payment_Gateway.BLL.Infrastructure.jwt;
-using Payment_Gateway.BLL.Handlers;
-using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.DAL.Implementation;
-using Microsoft.AspNetCore.Authorization;
+using Payment_Gateway.DAL.Interfaces;
+using Payment_Gateway.Models.Entities;
+using Payment_Gateway.Models.Extensions;
+using System.Text;
 
 namespace Payment_Gateway.API.Extensions
 {
 
     public static class ServiceExtensions
     {
+
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IJWTAuthenticator, JwtAuthenticator>();
@@ -27,7 +30,7 @@ namespace Payment_Gateway.API.Extensions
             services.AddTransient<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
             services.AddTransient<IServiceFactory, ServiceFactory>();
             //services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
+           services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
         }
 
@@ -85,7 +88,7 @@ namespace Payment_Gateway.API.Extensions
             .AddEntityFrameworkStores<PaymentGatewayDbContext>()
             .AddDefaultTokenProviders();
         }
-       
+
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
@@ -109,10 +112,7 @@ namespace Payment_Gateway.API.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
-        }
-
-
-      
+        }      
 
     }
 }

@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
 using Payment_Gateway.Shared.DataTransferObjects;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+
 namespace Payment_Gateway.BLL.Implementation.Services
 {
     public sealed class UserServices : IUserServices
     {
-
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<ApplicationUser> _appuserRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerManager _logger;
         private readonly UserManager<User> _userManager;
@@ -21,10 +23,8 @@ namespace Payment_Gateway.BLL.Implementation.Services
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _userRepo = _unitOfWork.GetRepository<User>();
+            _appuserRepo = _unitOfWork.GetRepository<ApplicationUser>();
         }
-
-
-
 
         public async Task<User> RegisterUser(UserForRegistrationDto userForRegistration)
         {
@@ -53,12 +53,10 @@ namespace Payment_Gateway.BLL.Implementation.Services
                 {
 
                     string errMsg = string.Join("\n", result.Errors.Select(x => x.Description));
-
                     throw new InvalidOperationException($"Failed to create user:\n{errMsg}");
                 }
 
                 return user;
-
             }
             catch (Exception ex)
             {
@@ -76,6 +74,17 @@ namespace Payment_Gateway.BLL.Implementation.Services
         public void UpdateUserProfile()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> GetSecretKey(string userId)
+        {
+            var user = await _appuserRepo.GetSingleByAsync(x => x.Id == userId, include: u => u.Include(x => x.ApiKey), tracking: true);
+            var apiKey = user.ApiKey.ApiSecretKey;
+            if(apiKey != null)
+            {
+                return apiKey;
+            }
+            throw new InvalidOperationException("No Api key");
         }
     }
 }

@@ -18,14 +18,20 @@ namespace Payment_Gateway.BLL.Implementation.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerManager _logger;
 
-        public AdminProfileServices(IHttpContextAccessor httpContextAccessor, ILoggerManager logger, IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public AdminProfileServices(IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _adminProfileRepo = _unitOfWork.GetRepository<AdminProfile>();
             _adminRepo = _unitOfWork.GetRepository<Admin>();
+            _adminProfileRepo = _unitOfWork.GetRepository<AdminProfile>();
+            _adminRepo = _unitOfWork.GetRepository<Admin>();
+        }
+
+        public AdminProfileServices(IHttpContextAccessor httpContextAccessor, ILoggerManager logger)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
 
