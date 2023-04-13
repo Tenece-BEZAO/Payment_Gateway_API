@@ -1,14 +1,12 @@
 ﻿using Payment_Gateway.Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Payment_Gateway.Shared.DataTransferObjects.Response;
 
 namespace Payment_Gateway.BLL.Interfaces.IServices
 {
     public interface IAdminServices
     {
         Task<string> RegisterAdmin(AdminForRegistrationDto adminForRegistration);
+        Task<CheckBalanceResponse> CheckBalance();
+        Task<FetchLedgerResponse> FetchLedger();
     }
 }

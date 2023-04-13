@@ -4,12 +4,16 @@ using NLog;
 using Payment_Gateway.API.Extensions;
 using Payment_Gateway.API.Filter;
 using Payment_Gateway.BLL.Extentions;
-using Payment_Gateway.BLL.Infrastructure;
+using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Implementation.Services;
+using Payment_Gateway.BLL.Interfaces;
+using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.Paystack.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.DAL.Context;
 using Payment_Gateway.DAL.Implementation;
 using Payment_Gateway.DAL.Interfaces;
+using Payment_Gateway.Models.Extensions;
 using System.Reflection;
 
 namespace Payment_Gateway.API
@@ -29,14 +33,9 @@ namespace Payment_Gateway.API
             builder.Services.ConfigureIISIntegration();
             builder.Services.BindConfigurations(builder.Configuration);
             builder.Services.ConfigureLoggerService();
-
+           
 
             builder.Services.AddAuthentication();
-            builder.Services.AddAuthorization(cfg =>
-            {
-                cfg.AddPolicy("Authorization", policy => policy.Requirements.Add(new AuthorizationRequirment()));
-            });
-
             //builder.Services.ConfigureIdentity();
 
             builder.Services.ConfigureJWT(builder.Configuration);
@@ -45,8 +44,14 @@ namespace Payment_Gateway.API
 
             builder.Services.AddScoped<ValidationFilterAttribute>();
 
-            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.BLL"));
+            //builder.Services.AddHttpContextAccessor();
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
             builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
+            builder.Services.AddScoped<IAdminServices, AdminServices>();
+            builder.Services.AddScoped<IAdminProfileServices, AdminProfileServices>();
+            builder.Services.AddScoped<IPayoutService, PayoutService>();
+            builder.Services.AddScoped<IPayoutServiceExtension, PayoutServiceExtension>();
+            builder.Services.AddScoped<IWalletService, WalletService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

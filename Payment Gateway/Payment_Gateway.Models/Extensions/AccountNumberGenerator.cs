@@ -23,8 +23,6 @@ namespace Payment_Gateway.Models.Extensions
             long maxValue2 = 99999999;
             int randomNumber2 = randomnext.Next((int)minValue2, (int)maxValue2);
             chars.AppendLine(randomNumber2.ToString());
-
-
             return chars.ToString();
         }
 
