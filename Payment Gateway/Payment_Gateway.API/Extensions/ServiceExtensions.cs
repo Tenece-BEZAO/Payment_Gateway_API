@@ -1,21 +1,21 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Payment_Gateway.BLL.Handlers;
-using Payment_Gateway.BLL.Implementation;
-using Payment_Gateway.BLL.Infrastructure.jwt;
-using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.BLL.LoggerService.Interface;
 using Payment_Gateway.DAL.Context;
-using Payment_Gateway.DAL.Implementation;
-using Payment_Gateway.DAL.Interfaces;
 using Payment_Gateway.Models.Entities;
-using Payment_Gateway.Models.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Payment_Gateway.BLL.Interfaces;
+using Payment_Gateway.BLL.Implementation;
+using Payment_Gateway.BLL.Infrastructure.jwt;
+using Payment_Gateway.BLL.Handlers;
+using Payment_Gateway.DAL.Interfaces;
+using Payment_Gateway.DAL.Implementation;
+using Microsoft.AspNetCore.Authorization;
+using Payment_Gateway.BLL.Implementation.Services;
+using Payment_Gateway.BLL.Interfaces.IServices;
 
 namespace Payment_Gateway.API.Extensions
 {
@@ -30,8 +30,10 @@ namespace Payment_Gateway.API.Extensions
             services.AddTransient<IUnitOfWork, UnitOfWork<PaymentGatewayDbContext>>();
             services.AddTransient<IServiceFactory, ServiceFactory>();
             //services.AddTransient<IEmailService, EmailService>();
-           services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<BLL.Interfaces.ITransactionService, TransactionService>();
+            services.AddScoped<IUserServices, UserServices>();
         }
 
         //Allows all requests from all origins to be sent to our API
@@ -65,8 +67,7 @@ namespace Payment_Gateway.API.Extensions
             {
                 config = serviceProvider.GetService<IConfiguration>();
             }
-            string cc = config.GetConnectionString("sqlConnection");
-            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(config.GetConnectionString("sqlConnection")));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
            .AddDefaultTokenProviders()
