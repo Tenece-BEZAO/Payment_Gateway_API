@@ -31,7 +31,6 @@ namespace Payment_Gateway.BLL.Implementation
                     reason = response.data.reason,
                     amount = response.data.amount,
                     recipient = response.data.recipient,
-                    createdAt = response.data.createdAt,
                     responsestatus = response.status,
                     status = response.data.status,
                     currency = response.data.currency,

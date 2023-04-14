@@ -8,6 +8,7 @@ using Payment_Gateway.BLL.Implementation;
 using Payment_Gateway.BLL.Implementation.Services;
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Interfaces.IServices;
+using Payment_Gateway.BLL.LoggerService.Implementation;
 using Payment_Gateway.BLL.Paystack.Implementation;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.DAL.Context;
@@ -93,12 +94,16 @@ namespace Payment_Gateway.API
 
             var app = builder.Build();
 
+            var logger = app.Services.GetRequiredService<ILoggerManager>();
+            app.ConfigureExceptionHandler(logger);
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseRouting();
 
             app.UseHttpsRedirection();

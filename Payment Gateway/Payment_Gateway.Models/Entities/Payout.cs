@@ -13,7 +13,6 @@ namespace Payment_Gateway.Models.Entities
         public bool responsestatus { get; set; }
         public string status { get; set; }
         public string WalletId { get; set; }
-        public string createdAt { get; set; }
         public string payoutId { get; set; }
         
     }
