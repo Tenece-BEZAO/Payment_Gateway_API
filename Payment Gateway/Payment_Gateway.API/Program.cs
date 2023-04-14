@@ -94,7 +94,7 @@ namespace Payment_Gateway.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.ConfigureExceptionHandler(app.Environment);
+
             app.UseRouting();
 
             app.UseHttpsRedirection();
