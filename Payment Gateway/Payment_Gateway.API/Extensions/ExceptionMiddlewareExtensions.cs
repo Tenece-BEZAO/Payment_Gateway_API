@@ -23,7 +23,7 @@ namespace Payment_Gateway.API.Extensions
                         {
                             NotFoundException => StatusCodes.Status404NotFound,
                             BadRequestException => StatusCodes.Status400BadRequest,
-                            InvalidOperationException => StatusCodes.Status400BadRequest,
+                           // InvalidOperationException => StatusCodes.Status400BadRequest,
                             _ => StatusCodes.Status500InternalServerError
                         };
 

@@ -6,6 +6,7 @@ using Payment_Gateway.API.Filter;
 using Payment_Gateway.BLL.Extentions;
 using Payment_Gateway.BLL.Implementation;
 using Payment_Gateway.BLL.Implementation.Services;
+using Payment_Gateway.BLL.Infrastructure;
 using Payment_Gateway.BLL.Interfaces;
 using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.LoggerService.Implementation;
@@ -37,6 +38,10 @@ namespace Payment_Gateway.API
            
 
             builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("Authorization", policy => policy.Requirements.Add(new AuthorizationRequirment()));
+            });
             //builder.Services.ConfigureIdentity();
 
             builder.Services.ConfigureJWT(builder.Configuration);
