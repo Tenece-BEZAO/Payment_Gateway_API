@@ -55,6 +55,7 @@ namespace Payment_Gateway.BLL.Implementation
             if (role != null)
                 throw new InvalidOperationException($"Role with name {request.Name} already exist");
 
+
             ApplicationRole roleToCreate = _mapper.Map<ApplicationRole>(request);
 
             await _roleManager.CreateAsync(roleToCreate);

@@ -62,6 +62,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
                     UserName = userForRegistration.UserName,
                     Email = userForRegistration.Email,
                     PhoneNumber = userForRegistration.PhoneNumber
+
                 };
 
                 user.EmailConfirmed = true;
@@ -164,6 +165,25 @@ namespace Payment_Gateway.BLL.Implementation.Services
         public Task<ApplicationUser> PatchUser(string userId, JsonPatchDocument<UserForUpdateDto> patchDocument)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<UserDto> GetUserByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if ( user == null )
+            {
+                return null;
+            }
+
+            return new UserDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Payment_Gateway.BLL.Interfaces.IServices
         void UpdateUserProfile();
         //NewChange
         Task<ApplicationUser> GetUserById(string id);
+        Task <UserDto> GetUserByIdAsync(string id);
         Task<bool> UpdateUser(string id, UserForUpdateDto userForUpdate);
         Task<bool> DeleteUser(string id);
         Task<IEnumerable<ApplicationUser>> GetAllUsers();
