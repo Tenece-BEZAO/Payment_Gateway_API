@@ -51,7 +51,7 @@ namespace Payment_Gateway.API
             builder.Services.AddScoped<ValidationFilterAttribute>();
 
             //builder.Services.AddHttpContextAccessor();
-            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.DAL"));
+            builder.Services.AddAutoMapper(Assembly.Load("Payment_Gateway.BLL"));
             builder.Services.AddScoped<IMakePaymentService, MakePaymentService>();
             builder.Services.AddScoped<IAdminServices, AdminServices>();
             builder.Services.AddScoped<IAdminProfileServices, AdminProfileServices>();
