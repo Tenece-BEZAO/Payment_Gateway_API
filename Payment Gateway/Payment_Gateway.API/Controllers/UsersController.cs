@@ -26,7 +26,7 @@ namespace Payment_Gateway.API.Controllers
         [HttpGet("Get user by Id")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var users = await _userServices.GetUserById(id);
+            var users = await _userServices.GetUserByIdAsync(id);
             return Ok(users);
         }
 
