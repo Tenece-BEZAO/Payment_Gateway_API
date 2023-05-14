@@ -27,7 +27,7 @@ namespace Payment_Gateway.BLL.Implementation.Services
 
             if(wallet != null)
             {
-                var newBalance = balance - amount;
+                var newBalance = balance + amount;
                 user.Wallet.Balance = newBalance;
                 await _WalletRepo.UpdateAsync(wallet);
                 return true;

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using Payment_Gateway.API.Extensions;
 using Payment_Gateway.BLL.Infrastructure;
+using Payment_Gateway.BLL.Interfaces;
+using Payment_Gateway.BLL.Interfaces.IServices;
 using Payment_Gateway.BLL.Paystack.Interfaces;
 using Payment_Gateway.Shared.DataTransferObjects.Request;
-using PayStack.Net;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Payment_Gateway.API.Controllers
@@ -13,11 +14,17 @@ namespace Payment_Gateway.API.Controllers
     [ApiController]
     public class PaymentController : Controller
     {
-        IMakePaymentService _paymentService;
+        public readonly IMakePaymentService _paymentService;
+        private readonly IWalletService _walletService;
+        private readonly IPaymentServiceExtension _paymentServiceExtension;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public PaymentController(IMakePaymentService paymentService)
+        public PaymentController(IMakePaymentService paymentService, IWalletService walletService, IPaymentServiceExtension paymentServiceExtension, IHttpContextAccessor httpContextAccessor)
         {
             _paymentService = paymentService;
+            _walletService = walletService;
+            _paymentServiceExtension = paymentServiceExtension;
+            _contextAccessor = httpContextAccessor;
         }
 
         [AllowAnonymous]
@@ -29,7 +36,17 @@ namespace Payment_Gateway.API.Controllers
         public async Task<ActionResult> MakePayment([FromBody] PaymentRequest makePayment)
         {
             var response = await _paymentService.MakePayment(makePayment);
-            return Ok(response);
+
+            if (response.data.status == "success" || response != null)
+            {
+                string? userId = _contextAccessor.HttpContext?.User.GetUserId();
+                int amount = response.data.amount;
+
+                _ = await _walletService.UpdateBlance(userId,amount);
+                _ = _paymentServiceExtension.CreatePayment(userId, response);
+                return Ok(response);
+            }
+            return BadRequest();
         }
     }
 }

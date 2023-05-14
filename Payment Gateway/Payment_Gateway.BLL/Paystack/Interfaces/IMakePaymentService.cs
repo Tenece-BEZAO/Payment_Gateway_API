@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Payment_Gateway.Shared.DataTransferObjects.Response;
 
 namespace Payment_Gateway.BLL.Paystack.Interfaces
 {
     public interface IMakePaymentService
     {
-        Task<object> MakePayment(PaymentRequest paymentRequest);
+        Task<PaymentResponse> MakePayment(PaymentRequest paymentRequest);
 
         Task<bool> VerifyPayment();
     }

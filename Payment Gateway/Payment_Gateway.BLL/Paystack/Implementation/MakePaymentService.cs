@@ -21,7 +21,9 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Transaction> _transRepo;
-        static IConfiguration? _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
+        private string? _ApiKey;
 
         IMapper _mapper;
         public MakePaymentService(IConfiguration configuration, IMapper mapper, IUnitOfWork unitOfWork)
@@ -29,49 +31,30 @@ namespace Payment_Gateway.BLL.Paystack.Implementation
             _configuration = configuration;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _httpClient = new HttpClient();
             _transRepo = _unitOfWork.GetRepository<Transaction>();
         }
 
-        public async Task<object> MakePayment(PaymentRequest paymentRequest)
+        public async Task<PaymentResponse> MakePayment(PaymentRequest paymentRequest)
         {
-            string ApiKey = (string)_configuration.GetSection("Paystack").GetSection("ApiKey").Value;
-            string Url = (string)_configuration.GetSection("Paystack").GetSection("Url").Value;
-            var payload = new
-            {
-                email = paymentRequest.Email,
-                amount = paymentRequest.AmountInKobo,
-                card = new
-                {
-                    number = paymentRequest.cardNumber,
-                    cvv = paymentRequest.cvv,
-                    expiry_month = paymentRequest.expiryMonth,
-                    expiry_year = paymentRequest.expiryYear
-                }
-            };
+            string? ApiKey = _configuration?.GetSection("Paystack").GetSection("ApiKey").Value;
+            string? Url = _configuration?.GetSection("Paystack").GetSection("Url").Value;
 
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
-            var jasonContent = JsonConvert.SerializeObject(payload);
+          
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
+            var jasonContent = JsonConvert.SerializeObject(paymentRequest);
             var httpContent = new StringContent(jasonContent, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(Url, httpContent);
-            string responseContent = await response.Content.ReadAsStringAsync();
-            string reference = JsonConvert.DeserializeObject<dynamic>(responseContent).data.reference;
-            string amount = JsonConvert.DeserializeObject<dynamic>(responseContent).data.amount;
+            var recipientResponse = await _httpClient.PostAsync(Url, httpContent);
 
-            // create Transaction entity
-            var transaction = new Transaction
-            {
-                TrxRef = reference,
-                Amount = paymentRequest.AmountInKobo,
-                Email = paymentRequest.Email,
-                CreatedAt = DateTime.Now
-            };
-            // add Transaction entity to repository
-            _transRepo.Add(transaction);
-            // save changes to database
-            await _unitOfWork.SaveChangesAsync();
+            if (recipientResponse.IsSuccessStatusCode)
+            { 
 
-            return new PaymentResponse { Reference = reference, Amount = amount };
+                string responseContent = await recipientResponse.Content.ReadAsStringAsync();
+                PaymentResponse response = JsonConvert.DeserializeObject<PaymentResponse>(responseContent);
+                return response;
+            }
+
+             throw new NotImplementedException();
         }
 
 

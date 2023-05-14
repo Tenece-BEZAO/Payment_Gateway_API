@@ -26,10 +26,22 @@ namespace Payment_Gateway.Shared.DataTransferObjects.Request
         public string Currency { get; set; } = "NGN";
 
         public string Bearer { get; set; }
-        public string cardNumber { get; set; }
-        public string cvv { get; set; }
-        public int expiryMonth { get; set; }
-        public int expiryYear { get; set; }
+
+        public Card card {get; set; }
+
+        public class Card
+        {
+
+            [JsonProperty("number")]
+            public string cardNumber { get; set; }
+            public string cvv { get; set; }
+
+            [JsonProperty("expiry_month")]
+            public int expiryMonth { get; set; }
+
+            [JsonProperty("expiry_year")]
+            public int expiryYear { get; set; }
+        }
     }
 
     public class ProcessPaymentRequest 

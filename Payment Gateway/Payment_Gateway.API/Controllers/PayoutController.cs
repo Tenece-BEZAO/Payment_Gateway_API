@@ -104,7 +104,9 @@ namespace Payment_Gateway.API.Controllers
             if (response.data.status == "success" || response != null)
             {
                 string? userId = _contextAccessor.HttpContext?.User.GetUserId();
-                _ = await _walletService.UpdateBlance(userId, int.Parse(response.data.amount));
+                int amount = int.Parse(response.data.amount) * (-1);
+
+                _ = await _walletService.UpdateBlance(userId,amount );
                 _ = _TransactionService.UpdatePayout(response);
                 return Ok(response);
             }
