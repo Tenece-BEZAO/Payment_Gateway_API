@@ -79,10 +79,13 @@ namespace Payment_Gateway.API.Controllers
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
         public async Task<ActionResult> InitiateTransfer([FromBody] InitiateTransferRequest initiateTransfer)
         {
-            TransferResponse response = await _payoutService.InitiateTransfer(initiateTransfer);
-            if (response != null)
-            {
+                TransferResponse response = await _payoutService.InitiateTransfer(initiateTransfer);
                 string? userId = _contextAccessor?.HttpContext?.User?.GetUserId();
+                int amount = initiateTransfer.AmountInKobo;
+                var balRes = await _walletService.GetBlance(userId, amount);
+
+            if (response != null && balRes == true)
+            {
                 _ = _TransactionService.CreatePayout(userId, response);
                 return Ok(response);
             }

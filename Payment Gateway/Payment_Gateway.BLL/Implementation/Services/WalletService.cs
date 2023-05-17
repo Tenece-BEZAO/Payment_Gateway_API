@@ -35,5 +35,19 @@ namespace Payment_Gateway.BLL.Implementation.Services
 
             return false;
         }
-    }
+
+        public async Task<bool> GetBlance(string userId, long amount)
+        {
+            var user = await _UserRepo.GetSingleByAsync(x => x.Id == userId, include: u => u.Include(x => x.Wallet), tracking: true);
+            var balance = user.Wallet.Balance;
+            var wallet = user.Wallet;
+
+            if (string.IsNullOrEmpty(user.Id) && wallet != null)
+            {
+                var newBalance = balance - amount;  
+                return newBalance > 0? true: false;           
+            }
+
+            return false;
+        }
 }
